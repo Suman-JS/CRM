@@ -1,0 +1,229 @@
+﻿@model IEnumerable<INSIGHT_CRM.Models.CreateClientVisitModel>
+
+@{
+    ViewBag.Title = "ShowAllVisitorReport";
+}
+<style>
+    #visitordatatble td, #visitordatatble th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .datetimepicker{
+        width:fit-content;
+        height:2.5rem;
+    }
+    .grid-dtpicker {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+    }
+</style>
+<h2 class="text-center">Show All Visitor Report</h2>
+
+<br />
+
+<form method="post" action="@Url.Action("ShowAllVisitorReport", "Client")">
+
+    <div class="row mb-3 grid-dtpicker">
+        @if (ViewBag.ShowResult)
+        {
+            <div class="col-auto">
+                <input type="date" class="form-control datetimepicker" name="startDate" placeholder="Start Date" value="@ViewBag.StartDate">
+            </div>
+            <div class="col-auto">
+                <input type="date" class="form-control datetimepicker" name="endDate" placeholder="End Date" value="@ViewBag.EndDate">
+            </div>
+        }
+        else
+        {
+            <div class="col-auto">
+                <input type="date" class="form-control datetimepicker" name="startDate" placeholder="Start Date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="col-auto">
+                <input type="date" class="form-control datetimepicker" name="endDate" placeholder="End Date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+            </div>
+        }
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Show Visitor</button>
+        </div>
+    </div>
+</form>
+
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table id="visitordatatble" class="table table-bordered table-hover" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>
+                        Sl.No
+                    </th>
+                    <th>
+                        Client Name
+                    </th>
+                    <th>
+                        PhoneNo
+                    </th>
+                    <th>
+                        AltPhoneNo
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        AltEmail
+                    </th>
+                    <th>
+                        AddressLine1
+                    </th>
+                    <th>
+                        AddressLine2
+                    </th>
+                    <th>
+                        PinCode
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        District
+                    </th>
+                    <th>
+                        State
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        PurposeOfVisit
+                    </th>
+                    <th>
+                        Project
+                    </th>
+                    <th>
+                        PropertyType
+                    </th>
+                    <th>
+                        Budget
+                    </th>
+                    <th>
+                        VisitStatus
+                    </th>
+                    <th>
+                        HearAboutUs
+                    </th>
+                    <th>
+                        People Came To Visit
+                    </th>
+                    <th>
+                        AddedBy
+                    </th>
+                    <th>
+                        AddedOn
+                    </th>
+                    <th>
+                        Remarks
+                    </th>
+                    <th>
+                        Occupation
+                    </th>
+                    <th>
+                        Feedback
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.RefID
+                            </td>
+                            <td>
+                                @item.ClientName
+                            </td>
+                            <td>
+                                @item.PhoneNo
+                            </td>
+                            <td>
+                                @item.AltPhoneNo
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                            <td>
+                                @item.AltEmail
+                            </td>
+                            <td>
+                                @item.AddressLine1
+                            </td>
+                            <td>
+                                @item.AddressLine2
+                            </td>
+                            <td>
+                                @item.PinCode
+                            </td>
+                            <td>
+                                @item.City
+                            </td>
+                            <td>
+                                @item.District
+                            </td>
+                            <td>
+                                @item.State
+                            </td>
+                            <td>
+                                @item.Country
+                            </td>
+                            <td>
+                                @item.PurposeOfVisit
+                            </td>
+                            <td>
+                                @item.ProjectToVisit
+                            </td>
+                            <td>
+                                @item.PropertyType
+                            </td>
+                            <td>
+                                @item.Budget
+                            </td>
+                            <td>
+                                @item.VisitStatus
+                            </td>
+                            <td>
+                                @item.HearAboutUs
+                            </td>
+                            <td>
+                                @item.HowManyTimesCameToVisit
+                            </td>
+                            <td>
+                                @item.AddedBy
+                            </td>
+                            <td>
+                                @item.AddedOn
+                            </td>
+                            <td>
+                                @item.Remarks
+                            </td>
+                            <td>
+                                @item.Occupation
+                            </td>
+                            <td>
+                                @item.FeedBack
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="~/js/DataTable/CreateDataTable.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

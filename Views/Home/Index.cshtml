@@ -1,0 +1,391 @@
+﻿@using INSIGHT_CRM.Models
+@model DashboardViewModels
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<link href="~/css/CardAnimation.css" rel="stylesheet" />
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Today's Status</h1>
+</div>
+
+<div class="row">
+
+    <!--Total Todays Visit-->
+    <div class="col-xl-3 col-md-6 mb-4 card-animation ">
+        <div class="card border-left-primary shadow h-100 py-2 ">
+            <div class="card-body ">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Today's Visit
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TodaysTotalVisitor</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-people-group fa-shake fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checked-in Visitor -->
+    <div class="col-xl-3 col-md-6 mb-4 card-animation">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Checked-in Visitor
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.CheckedInVisitor</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-person-circle-check fa-shake fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Visitors -->
+    <div class="col-xl-3 col-md-6 mb-4 card-animation">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Checked-Out Visitor
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@ViewBag.checkedOutVisitor</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-right-from-bracket fa-shake fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scheduled visitors -->
+    <div class="col-xl-3 col-md-6 mb-4 card-animation">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Scheduled Visitor
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.ScheduledVisitor</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-shake fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FeedBack Form -->
+<div class="table-wrapper">
+    <h5 class="card-title">Visitor Feedback Form</h5>
+    <div class="card w-100" style="margin-bottom: 2.5rem;margin-top:2.25rem; font-size:4em;">
+        <div class="card-body card-table">
+            <div class="table-responsive table-responsive-sm">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Visitor Name</th>
+                            <th>Project Name</th>
+                            <th>Salesman</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        @if (Model.FeedBack.Count() > 0)
+                        {
+                            foreach (var visitor in Model.FeedBack)
+                            {
+                                <tr>
+                                    <td>@visitor.ClientName</td>
+                                    <td>@visitor.ProjectToVisit</td>
+                                    <td>@visitor.WhomToMeet</td>
+                                    <td style="color: @(visitor.Status == "Checked-In" ? "red" : "green")">@visitor.Status</td>
+                                    <td>
+                                        @if (visitor.Status == "Checked-Out")
+                                        {
+                                            <button type="button" class="btn btn-success disabled action-button" style="pointer-events: none; width: 100%;">Completed</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary action-button feedback-button" id="feedback-button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-client-id="@visitor.ClientID" data-ref-id="@visitor.RefID" style="width: 100%;">Feedback</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <p class="text-capitalize text-center" style="font-size:3rem;">No Data Found!!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- End Of FeedBack Form -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Visitor's Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="color:red;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Tell us what do you think!</label>
+                        <textarea class="form-control custom-textarea" id="message-text" required pattern=".{10,}"></textarea>
+                        <div class="error-message" id="feedback-validation" style="display:none;color:red">Please enter at least 10 characters.</div>
+                    </div>
+                </form>
+                <P style="color: red; font-family: 'Ubuntu', sans-serif;"><strong>NOTE : </strong>Please Remember Feedback Cannot be Edited!</P>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="save-feedback-btn">Save Feedback</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*card table*@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <h5 class="card-title" style="font-weight: bold;">
+                        Just Checked-in
+                        <button type="button" class="btn btn-primary btn-sm float-right" onclick="window.location.href='@Url.Action("CreateNewVisitor", "Client")'">View All</button>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Project</th>
+                                    <th>Check-In</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RecentCheckin.Count() > 0)
+                                {
+                                    foreach (var visitor in Model.RecentCheckin)
+                                    {
+                                        <tr>
+                                            <td>@visitor.ClientName</td>
+                                            <td>@visitor.ProjectToVisit</td>
+                                            <td>@visitor.AddedOn</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            <p class="text-capitalize text-center" style="font-size:3rem;">No Data Found!!</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <h5 class="card-title" style="font-weight: bold;">
+                        Just Checked-Out
+                        <button type="button" class="btn btn-primary btn-sm float-right" onclick="window.location.href='@Url.Action("CreateNewVisitor", "Client")'">View All</button>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Project</th>
+                                    <th>Check-Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RecentCheckOut.Count() > 0)
+                                {
+                                    foreach (var visitor in Model.RecentCheckOut)
+                                    {
+                                        <tr>
+                                            <td>@visitor.ClientName</td>
+                                            <td>@visitor.ProjectToVisit</td>
+                                            <td>@visitor.CheckoutTime</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            <p class="text-capitalize text-center" style="font-size:3rem;">No Data Found!!</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <h5 class="card-title" style="font-weight: bold;">
+                        Expected Visitor
+                        <button type="button" class="btn btn-primary btn-sm float-right" onclick="window.location.href='@Url.Action("CreateScheduledVisitor", "Client")'">View All</button>
+
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Project</th>
+                                    <th>Phone</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ExpectedVisitor.Count() > 0)
+                                {
+                                    foreach (var visitor in Model.ExpectedVisitor)
+                                    {
+                                        <tr>
+                                            <td>@visitor.VisitorName</td>
+                                            <td>@visitor.ProjectToVisit</td>
+                                            <td>@visitor.PhoneNo</td>
+                                            <td>@visitor.VisitDateTime</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            <p class="text-capitalize text-center" style="font-size:3rem;">No Data Found!!</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    var feedbackButton = document.getElementById("feedback-button");
+    feedbackButton.addEventListener("click", function () {
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {});
+        myModal.show();
+    });
+</script>
+
+
+<script>
+    $(function () {
+        // Hide validation message on page load
+        $('#feedback-validation').hide();
+
+        // Handle feedback button click
+        $('.feedback-button').on('click', function () {
+            var clientId = $(this).data('client-id');
+            var refId = $(this).data('ref-id');
+            var modal = $('#exampleModal');
+
+            // Set the client and reference IDs on the modal
+            modal.data('client-id', clientId);
+            modal.data('ref-id', refId);
+
+            // Open the modal
+            modal.modal('show');
+        });
+
+        // Handle save feedback button click
+        $('#save-feedback-btn').on('click', function () {
+            var clientId = $('#exampleModal').data('client-id');
+            var refId = $('#exampleModal').data('ref-id');
+            var feedback = $('#message-text').val();
+
+            // Check if feedback is at least 10 characters long
+            if ($('#message-text')[0].checkValidity() === false) {
+                $('.error-message').show();
+                return;
+            } else {
+                $('.error-message').hide();
+            }
+
+            // If feedback is valid, submit the form
+            $.post('/Home/SaveFeedback', { ClientID: clientId, RefID: refId, Feedback: feedback }, function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        $('#exampleModal').modal('hide');
+                        window.location.reload();
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        $('#exampleModal').modal('hide');
+                        window.location.reload();
+                    });
+                }
+            });
+        });
+    });
+
+</script>

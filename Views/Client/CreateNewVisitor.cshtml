@@ -1,0 +1,813 @@
+﻿@model IEnumerable<INSIGHT_CRM.Models.CreateClientVisitModel>
+
+@{
+    ViewBag.Title = "CreateNewVisitor";
+}
+
+
+@if (TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success text-center">
+        <strong>Success ! </strong>
+        @TempData["SuccessMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMsg"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <strong>Error ! </strong>
+        @TempData["ErrorMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["nodatamsg"] != null)
+{
+    <div class="alert alert-info text-center">
+        <strong>Info : </strong>
+        @TempData["nodatamsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+<style>
+    .form-style {
+        display: flex;
+        margin-left: 20%;
+        margin-bottom: 0.5rem;
+    }
+
+    .out_color {
+        outline: 1px solid #f47921;
+        height: 2.2rem;
+        border: none;
+        border-radius: 2%;
+    }
+
+    .custom-checkbox:checked {
+        background-color: #f47921;
+        outline: none;
+        border: none;
+    }
+
+    .container {
+        max-width: 960px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .avatar-upload {
+        position: relative;
+        max-width: 205px;
+        margin: 50px auto;
+        margin: 0;
+        left: 10%;
+    }
+
+        .avatar-upload .avatar-edit {
+            position: absolute;
+            right: 12px;
+            z-index: 1;
+            top: 10px;
+        }
+
+            .avatar-upload .avatar-edit input {
+                display: none;
+            }
+
+                .avatar-upload .avatar-edit input + label {
+                    display: inline-block;
+                    width: 34px;
+                    height: 34px;
+                    margin-bottom: 0;
+                    border-radius: 100%;
+                    background: #ffffff;
+                    border: 1px solid transparent;
+                    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+                    cursor: pointer;
+                    font-weight: normal;
+                    transition: all 0.2s ease-in-out;
+                }
+
+                    .avatar-upload .avatar-edit input + label:hover {
+                        background: #f1f1f1;
+                        border-color: #d6d6d6;
+                    }
+
+                    .avatar-upload .avatar-edit input + label:after {
+                        content: "\f040";
+                        font-family: "FontAwesome";
+                        color: #757575;
+                        position: absolute;
+                        top: 10px;
+                        left: 0;
+                        right: 0;
+                        text-align: center;
+                        margin: auto;
+                    }
+
+        .avatar-upload .avatar-preview {
+            width: 192px;
+            height: 192px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #f8f8f8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+            .avatar-upload .avatar-preview > div {
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+
+    .spac {
+        margin-left: 3%;
+    }
+
+   .modal-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0;
+    }
+
+    .close-button {
+        font-size: 2rem;
+        padding: 0;
+        position: absolute;
+        right: 4%;
+        top: 4%;
+    }
+    .required {
+        color: red;
+        font-size: 1.112rem;
+        margin-left: -6%;
+    }
+/*    .remove-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 999;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 0, 0, 0.8);
+    padding: 5px;
+    cursor: pointer;
+    outline: none;}*/
+
+
+/*.remove-image-btn i {
+    font-size: 12px;
+}*/
+
+    .fa, #removeImageBtn {
+        font-size: 24px !important;
+        color: red;
+        border: none;
+        border-radius: 50%;
+        position: absolute;
+        top: 12%;
+        left: 10%;
+        background: white;
+    }
+
+        .fa, #removeImageBtn:after {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            margin: auto;
+        }
+
+</style>
+
+
+
+<h2 class="text-center" style="font-weight:600;">Create New Visitor</h2>
+
+@using (Html.BeginForm("CreateNewVisitor", "Client", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+
+
+<div class="form-horizontal" style="border: 1px solid royalblue">
+    <br />
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" style="position:absolute;right:5%;">
+        <i class="fas fa-search fa-sm"></i>
+        View
+    </button>
+    <br />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <!--html model start -->
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="padding: 5%">
+                <div class="modal-header">
+                    <button type="button" class="close close-button" data-dismiss="modal" aria-label="Close">
+                        <span style="color:red;">&times;</span>
+                    </button>
+                </div>
+
+                <table class="table table-bordered table-responsive" id="allvisitordatatble" style="width: fit-content;">
+                    <thead>
+                        <tr>
+                            <th>
+                                Visitor Name
+                            </th>
+                            <th>
+                                PhoneNo
+                            </th>
+                            <th>
+                                Email Address
+                            </th>
+                            <th>
+                                Project To Visit
+                            </th>
+                            <th>
+                                Budget
+                            </th>
+                            <th>
+                                Visit Status
+                            </th>
+                            <th>
+                                Added By
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.isEmpty != true)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.ClientName
+                                    </td>
+                                    <td>
+                                        @item.PhoneNo
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.ProjectToVisit
+                                    </td>
+                                    <td>
+                                        @item.Budget
+                                    </td>
+                                    <td>
+                                        @item.VisitStatus
+                                    </td>
+                                    <td>
+                                        @item.AddedBy
+                                    </td>
+                                    <td>
+                                        <a href="~/Client/CreateNewVisitor?id=@item.ClientID&RefID=@item.RefID" class="btn btn-primary">Select</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <p class="text-capitalize text-center" style="font-size:3rem;">No Data Found!!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--html model end -->
+
+    <div class="form-group row spac">
+        <label class="col-sm-1" style="display: inline-block !important;">Date :</label>
+
+        <div class="col-md-4">
+            @if (ViewBag.isEditMode)
+            {
+                <input type="datetime" name="name" value="@Model.First().AddedOn" class="form-control" readonly style="width:fit-content;" />
+            }
+            else
+            {
+                <input type="datetime" name="date" value="@DateTime.Now" class="form-control" readonly style="width:fit-content;" />
+            }
+        </div>
+    </div>
+    <div class="form-group row spac">
+        <label class="col-sm-1" style="display: inline-block !important;">SlNo :</label>
+        <div class="col-sm-9">
+            @if (ViewBag.isEditMode)
+            {
+                <input type="number" name="name" value="@Model.First().RefID" readonly class="form-control" style="width:fit-content;" />
+            }
+            else
+            {
+                <input type="number" name="name" value="@ViewBag.NewRefID" readonly class="form-control" style="width:fit-content;" />
+            }
+        </div>
+    </div>
+
+<div class="form-group form-style">
+    <label class="control-label col-md-3">Visitor Photo : </label>
+    <div class="col-md-10">
+        @if (ViewBag.isEditMode)
+        {
+            <div class="container" style=" padding: 0;margin:0;">
+                <div class="avatar-upload">
+                    <div class="avatar-edit">
+                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="newImage" />
+                        <label for="imageUpload"></label>
+                        <img src="@Url.Content(Model.First().ImagePath)" alt="Visitor Image" id="imagePreview" type='file' accept=".png, .jpg, .jpeg" name="file" hidden />
+                        <button type="button" class="btn btn-danger remove-image-btn" style="display: none;"><i class="fa fa-trash"></i></button>
+                    </div>
+                    <div class="avatar-preview">
+                        <div id="imagePreview" style="background-image: url('@Url.Content(Model.First().ImagePath)');"></div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+                            $('#imagePreview').hide();
+                            $('#imagePreview').fadeIn(650);
+                            var imagePath = URL.createObjectURL(input.files[0]);
+                            console.log(imagePath);
+                            saveImagePath(imagePath);
+                            if (input.files[0].name) {
+                                $('.remove-image-btn').show();
+                            } else {
+                                $('.remove-image-btn').hide();
+                            }
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                $("#imageUpload").change(function () {
+                    readURL(this);
+                });
+
+                $('.remove-image-btn').click(function() {
+                    $('#imagePreview').css('background-image', 'url(' + '@Url.Content("~/Content/UserANDClientImages/no-image.png")' + ')');
+                    $('#imagePath').val('');
+                    $(this).hide();
+                });
+            </script>
+        }
+        else
+        {
+            <div class="container" style="padding: 0;margin:0;">
+                <div class="avatar-upload">
+                    <div class="avatar-edit">
+                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="file" />
+                        <label for="imageUpload"></label>
+                    </div>
+                    <div class="avatar-preview">
+                        <div id="imagePreview" style="background-image: url('../../Content/UserANDClientImages/no-image.png'); opacity:0.8;">
+                        </div>
+                    </div>
+                </div>
+                <button id="removeImageBtn" type="button" style="display: none;"><i class="fa fa-remove" style="font-size:12px;color:red;border:none;border-radius:50%;"></i></button>
+            </div>
+            <script>
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+                            $('#imagePreview').hide();
+                            $('#imagePreview').fadeIn(650);
+                            $('#imagePath').val(input.files[0].name);
+                            var imagePath = URL.createObjectURL(input.files[0]);
+                            console.log(imagePath);
+                            $('#removeImageBtn').show();
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                $("#imageUpload").change(function () {
+                    readURL(this);
+                });
+
+                $('#removeImageBtn').click(function () {
+                    $('#imagePreview').css('background-image', 'url("../../Content/UserANDClientImages/no-image.png")');
+                    $('#imagePath').val("");
+                    $('#removeImageBtn').hide();
+                });
+            </script>
+        }
+
+    </div>
+</div>
+
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3"><span class="required">*</span>Visitor Name : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="text" name="ClientName" onchange="myfunction()" id="name" value=@Model.First().ClientName class="form-control col-md-6 out_color" autocomplete="off" />
+                    }
+                    else
+                    {
+                        <input type="text" name="ClientName" value="" class="form-control col-md-6 out_color" autocomplete="off" required />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Contact No : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="number" name="PhoneNo" id="contact" onchange="myfunction()" value=@Model.First().PhoneNo class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="number" name="PhoneNo" value="" class="form-control col-md-6 out_color" required />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Alt. Contact No : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="number" name="AltPhoneNo" onchange="myfunction()" id="contact2" value=@Model.First().AltPhoneNo class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="number" name="AltPhoneNo" value="" class="form-control col-md-6 out_color" />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">E-mail Address : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="email" name="Email" id="email" onchange="myfunction()" value=@Model.First().Email class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="email" name="Email" value="" class="form-control col-md-6 out_color" required />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Alt. E-mail Address : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="email" name="AltEmail" id="email2" onchange="myfunction()" value=@Model.First().AltEmail class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="email" name="AltEmail" value="" class="form-control col-md-6 out_color" />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Address Line1 : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="text" name="AddressLine1" id="addressLine1" onchange="myfunction()" value=@Model.First().AddressLine1 class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="text" name="AddressLine1" value="" class="form-control col-md-6 out_color" required />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Address Line2 : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="text" name="AddressLine2" onchange="myfunction()" id="addressLine2" value=@Model.First().AddressLine2 class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="text" name="AddressLine2" value="" class="form-control col-md-6 out_color" required />
+                    }
+                </div>
+            </div>
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Pin Code : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="number" name="PinCode" id="pinCode" onchange="myfunction()" value=@Model.First().PinCode class="form-control col-md-6 out_color" min="0" />
+                    }
+                    else
+                    {
+                        <input type="number" name="PinCode" value="" class="form-control col-md-6 out_color" min="0" required />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">City : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+
+                        @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.CityList, new { @class = "form-control col-md-6 out_color", @id = "city", @onchange = "myfunction()", @required = "required" })
+
+                    }
+                    else
+                    {
+                        @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.CityList, "-- Select a City --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">District : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("District", (IEnumerable<SelectListItem>)ViewBag.DistrictList, new { @class = "form-control col-md-6 out_color", @id = "district", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("District", (IEnumerable<SelectListItem>)ViewBag.DistrictList, "-- Select a District --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">State : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("State", (IEnumerable<SelectListItem>)ViewBag.StateList, new { @class = "form-control col-md-6 out_color", @id = "state", @onchange = "myfunction()", @required = "required" })
+
+                    }
+                    else
+                    {
+                        @Html.DropDownList("State", (IEnumerable<SelectListItem>)ViewBag.StateList, "-- Select a State --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Country : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("Country", (IEnumerable<SelectListItem>)ViewBag.CountryList, new { @class = "form-control col-md-6 out_color", @id = "country", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("Country", (IEnumerable<SelectListItem>)ViewBag.CountryList, "-- Select a Country --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Purpose Of Visit : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("PurposeOfVisit", (IEnumerable<SelectListItem>)ViewBag.PurposeOfVisit, new { @class = "form-control col-md-6 out_color", @id = "purpose", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("PurposeOfVisit", (IEnumerable<SelectListItem>)ViewBag.PurposeOfVisit, "-- Select a Purpose --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Type Of Property : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("PropertyType", (IEnumerable<SelectListItem>)ViewBag.PropertyType, new { @class = "form-control col-md-6 out_color", @id = "property", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("PropertyType", (IEnumerable<SelectListItem>)ViewBag.PropertyType, "-- Select Property Type --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Project To Visit : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("ProjectToVisit", (IEnumerable<SelectListItem>)ViewBag.ProjectToVisit, new { @class = "form-control col-md-6 out_color", @id = "project", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("ProjectToVisit", (IEnumerable<SelectListItem>)ViewBag.ProjectToVisit, "-- Select Project --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Budget : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("Budget", (IEnumerable<SelectListItem>)ViewBag.BudgetList, new { @class = "form-control col-md-6 out_color", @id = "bud", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("Budget", (IEnumerable<SelectListItem>)ViewBag.BudgetList, "-- Select Budget --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Occupation : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("Occupation", (IEnumerable<SelectListItem>)ViewBag.Occupation, new { @class = "form-control col-md-6 out_color", @id = "occupation", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("Occupation", (IEnumerable<SelectListItem>)ViewBag.Occupation, "-- Select Occupation --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Visit Status : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("VisitStatus", (IEnumerable<SelectListItem>)ViewBag.VisitStatus, new { @class = "form-control col-md-6 out_color", @id = "visitStatus", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("VisitStatus", (IEnumerable<SelectListItem>)ViewBag.VisitStatus, "-- Select a Status --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Whom to Meet : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("WhomToMeet", (IEnumerable<SelectListItem>)ViewBag.Employee, new { @class = "form-control col-md-6 out_color", @id = "WhomToMeet", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("WhomToMeet", (IEnumerable<SelectListItem>)ViewBag.Employee, "-- Select Salesman --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">How Many People Came To Visit : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="number" name="HowManyTimesCameToVisit" id="howmanytimes" onchange="myfunction()" value=@Model.First().HowManyTimesCameToVisit class="form-control col-md-6 out_color" min="0" />
+                    }
+                    else
+                    {
+                        <input type="number" name="HowManyTimesCameToVisit" value="" class="form-control col-md-6 out_color" min="0" />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Where Did You Hear About us? : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        @Html.DropDownList("HearAboutUs", (IEnumerable<SelectListItem>)ViewBag.HearAboutUs, new { @class = "form-control col-md-6 out_color", @id = "hear", @onchange = "myfunction()", @required = "required" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("HearAboutUs", (IEnumerable<SelectListItem>)ViewBag.HearAboutUs, "-- Select an Option --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                    }
+
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <label class="control-label col-md-3">Remarks : </label>
+                <div class="col-md-10">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="text" name="Remarks" id="remarks" onchange="myfunction()" value=@Model.First().Remarks class="form-control col-md-6 out_color" />
+                    }
+                    else
+                    {
+                        <input type="text" name="Remarks" value="" class="form-control col-md-6 out_color" />
+                    }
+                </div>
+            </div>
+
+            <div class="form-group form-style">
+                <div class="col-md-offset-6 col-md-6" style="padding: 2rem; position: relative; left: 25%">
+                    @if (ViewBag.isEditMode)
+                    {
+                        <input type="submit" value="Save" class="btn btn-primary disabled" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    }
+                    @if (ViewBag.isEditMode)
+                    {
+                        <a id="anchor" href=""
+                           class="btn btn-success">
+                            Update
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="" class="btn btn-success disabled">Update</a>
+                    }
+
+                    <a class="btn btn-info" href="~/Client/CreateNewVisitor">Clear</a>&nbsp;
+                    @if (ViewBag.isEditMode)
+                    {
+                        <a href="~/Client/DeleteVisitor?id=@Model.First().ClientID&RefID=@Model.First().RefID" class="btn btn-danger">Delete</a>
+                    }
+                    else
+                    {
+                        <a href="~/Client/DeleteVisitor?id=&RefID=" class="btn btn-danger disabled">Delete</a>
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+        }
+
+        <script type="text/javascript">
+
+    function myfunction() {
+        var Name = document.getElementById("name").value;
+        var Contact1 = document.getElementById("contact").value;
+        var Contact2 = document.getElementById("contact2").value;
+        var Email1 = document.getElementById("email").value;
+        var Email2 = document.getElementById("email2").value;
+        var AddressLine1 = document.getElementById("addressLine1").value;
+        var AddressLine2 = document.getElementById("addressLine2").value;
+        var Pincode = document.getElementById("pinCode").value;
+        var City = document.getElementById("city").value;
+        var District = document.getElementById("district").value;
+        var State = document.getElementById("state").value;
+        var Country = document.getElementById("country").value;
+        var Purpose = document.getElementById("purpose").value;
+        var Property = document.getElementById("property").value;
+        var Project = document.getElementById("project").value;
+        var Budget = document.getElementById("bud").value;
+        var Occupation = document.getElementById("occupation").value;
+        var VisitStatus = document.getElementById("visitStatus").value;
+        var HowManyTimes = document.getElementById("howmanytimes").value;
+        var Hear = document.getElementById("hear").value;
+        var Remarks = document.getElementById("remarks").value;
+        var WhomToMeet = document.getElementById("WhomToMeet").value;
+
+        var anchor = document.getElementById("anchor").href = `UpdateVisitor?id=@Model.First().ClientID&RefID=@Model.First().RefID&ClientName=${Name}&PhoneNo=${Contact1}&AltPhoneNo=${Contact2}&Email=${Email1}&AltEmail=${Email2}&AddressLine1=${AddressLine1}&AddressLine2=${AddressLine2}&PinCode=${Pincode}&City=${City}&District=${District}&State=${State}&Country=${Country}&PurposeOfVisit=${Purpose}&ProjectToVisit=${Project}&PropertyType=${Property}&Budget=${Budget}&VisitStatus=${VisitStatus}&HearAboutUs=${Hear}&HowManyTimesCameToVisit=${HowManyTimes}&Remarks=${Remarks}&Occupation=${Occupation}&WhomToMeet=${WhomToMeet}`;
+    }
+        </script>
+
+        <script src="~/js/DataTable/CreateDataTable.js"></script>

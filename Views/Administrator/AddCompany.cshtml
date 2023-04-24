@@ -1,0 +1,452 @@
+﻿@model IEnumerable<Insight_CRM.Models.CreateCompanyModel>
+
+@{
+    ViewBag.Title = "AddCompany";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+@if (TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success text-center">
+        <strong>Success ! </strong>
+        @TempData["SuccessMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMsg"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <strong>Error ! </strong>
+        @TempData["ErrorMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["nodatamsg"] != null)
+{
+    <div class="alert alert-info text-center">
+        <strong>Info : </strong>
+        @TempData["nodatamsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+<style>
+    .form-style {
+        display: flex;
+        margin-left: 20%;
+        margin-bottom: 0.5rem;
+    }
+
+    .out_color {
+        outline: 1px solid #f47921;
+        height: 2.2rem;
+    }
+    .modal-button {
+        position: absolute;
+        right: 10%;
+        top: 8%;
+    }
+
+    body .modal-dialog { /* Width */
+        max-width: 100%;
+        width: auto !important;
+        position: absolute !important;
+        top: 10%;
+        left: 15%;
+        transform: translate(-15%, 0);
+        /*padding : 2% ;*/
+    }
+
+    .modal-content {
+        padding: 4%;
+        margin: 2%;
+    }
+
+    .close {
+        position: absolute;
+        right: 2%;
+        top: 1%;
+        font-size: 2rem;
+    }
+
+</style>
+
+<h2 class="text-center" style="font-weight:600;">Create Company Name</h2>
+
+@using (Html.BeginForm("AddCompany", "Administrator", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal buttons" style="border: 1px solid royalblue">
+        <br />
+        <button type="button" class="btn btn-primary modal-button" data-toggle="modal" data-target=".bd-example-modal-xl" >
+            <i class="fas fa-search fa-sm"></i>
+            View
+        </button>
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <!--html model start -->
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <h6>Add Company Data</h6>
+        <div class="modal-dialog modal-xl">
+
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                    <span>&times;</span>
+                </button>
+                <table class="table table-bordered table-striped table-responsive" id="CompanyListTable" style="width:100%;">
+
+                    <thead>
+                        <tr>
+                            <th>
+                                Company Name
+                            </th>
+                            <th>
+                                Company Tag Line
+                            </th>
+                            <th>
+                                Contact No
+                            </th>
+                            <th>
+                                Alternate Contact No
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Website
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.isEmpty != true)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.CompanyName
+                                    </td>
+                                    <td>
+                                        @item.CompanyTagLine
+                                    </td>
+                                    <td>
+                                        @item.ContactNo1
+                                    </td>
+                                    <td>
+                                        @item.ContactNo2
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.Website
+                                    </td>
+                                    <td>
+                                        <a href="~/Administrator/AddCompany?id=@item.CompanyCode&RefID=@item.RefID" class="btn btn-primary">Select</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        <!--html model end -->
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Company Name : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="CompanyName" value=@Model.First().CompanyName class="form-control col-md-6 out_color" id="companyName" onchange="myfunction()" required/>
+                }
+                else
+                {
+                    <input type="text" name="CompanyName" value="" class="form-control col-md-6 out_color" required />
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Company Tag Line : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="CompanyTagLine" value=@Model.First().CompanyTagLine class="form-control col-md-6 out_color" id="tagLine" onchange="myfunction()" />
+                }
+                else
+                {
+                    <input type="text" name="CompanyTagLine" value=" " class="form-control col-md-6 out_color" />
+                }
+            </div>
+        </div>
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Contact Person : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="ContactPerson" value=@Model.First().ContactPerson class="form-control col-md-6 out_color" id="contactPerson" onchange="myfunction()" required/>
+                }
+                else
+                {
+                    <input type="text" name="ContactPerson" value="" class="form-control col-md-6 out_color" />
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Contact No : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="tel" name="ContactNo1" value=@Model.First().ContactNo1 class="form-control col-md-6 out_color" id="contactNo1" onchange="myfunction()" required/>
+                }
+                else
+                {
+                    <input type="tel" name="ContactNo1" value="" class="form-control col-md-6 out_color" required />
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Alternate Contact No : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="tel" name="ContactNo2" value=@Model.First().ContactNo2 class="form-control col-md-6 out_color" id="contactNo2" onchange="myfunction()" />
+                }
+                else
+                {
+                    <input type="tel" name="ContactNo2" value="" class="form-control col-md-6 out_color" />
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">E-mail Address : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="email" name="Email" value=@Model.First().Email class="form-control col-md-6 out_color" id="email" onchange="myfunction()" required/>
+                }
+                else
+                {
+                    <input type="email" name="Email" value="" class="form-control col-md-6 out_color" required/>
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Address Line1 : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="AddressLine1" value=@Model.First().AddressLine1 class="form-control col-md-6 out_color" id="addressLine1" onchange="myfunction()" required/>
+                }
+                else
+                {
+                    <input type="text" name="AddressLine1" value="" class="form-control col-md-6 out_color" required />
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Address Line2 : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="AddressLine2" value=@Model.First().AddressLine2 class="form-control col-md-6 out_color" id="addressLine2" onchange="myfunction()" required/>
+                }
+                else
+                {
+                    <input type="text" name="AddressLine2" value="" class="form-control col-md-6 out_color"  required/>
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">City : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+
+                    @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.CityList, new { @class = "form-control col-md-6 out_color", @id = "city", @required = "required", @onchange = "myfunction()" })
+
+                }
+                else
+                {
+                    @Html.DropDownList("City", (IEnumerable<SelectListItem>)ViewBag.CityList, "-- Select a City --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Pin Code : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="number" name="PinCode" value=@Model.First().PinCode class="form-control col-md-6 out_color" id="pinCode" onchange="myfunction()" required />
+                }
+                else
+                {
+                    <input type="number" name="PinCode" value="" class="form-control col-md-6 out_color" required/>
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">District : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    @Html.DropDownList("District", (IEnumerable<SelectListItem>)ViewBag.DistrictList, new { @class = "form-control col-md-6 out_color", @id = "district", @required = "required", @onchange = "myfunction()" })
+                }
+                else
+                {
+                    @Html.DropDownList("District", (IEnumerable<SelectListItem>)ViewBag.DistrictList, "-- Select a District --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">State : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    @Html.DropDownList("State", (IEnumerable<SelectListItem>)ViewBag.StateList, new { @class = "form-control col-md-6 out_color", @id = "state", @required = "required", @onchange = "myfunction()" })
+
+                }
+                else
+                {
+                    @Html.DropDownList("State", (IEnumerable<SelectListItem>)ViewBag.StateList, "-- Select a State --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Country : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    @Html.DropDownList("Country", (IEnumerable<SelectListItem>)ViewBag.CountryList, new { @class = "form-control col-md-6 out_color", @id = "country", @required = "required", @onchange = "myfunction()" })
+                }
+                else
+                {
+                    @Html.DropDownList("Country", (IEnumerable<SelectListItem>)ViewBag.CountryList, "-- Select a Country --", new { @class = "form-control col-md-6 out_color", @required = "required" })
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">Website : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="Website" value=@Model.First().Website class="form-control col-md-6 out_color" onchange="myfunction()" id="website" />
+                }
+                else
+                {
+                    <input type="text" name="Website" value="" class="form-control col-md-6 out_color"/>
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">PAN No : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="PAN" value=@Model.First().PAN class="form-control col-md-6 out_color" onchange="myfunction()" id="pan" required/>
+                }
+                else
+                {
+                    <input type="text" name="PAN" value="" class="form-control col-md-6 out_color" required/>
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <label class="control-label col-md-3">GST NO : </label>
+            <div class="col-md-10">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="text" name="GSTNO" value=@Model.First().GSTNO class="form-control col-md-6 out_color" onchange="myfunction()" id="gst" required/>
+                }
+                else
+                {
+                    <input type="text" name="GSTNO" value="" class="form-control col-md-6 out_color" required/>
+                }
+            </div>
+        </div>
+
+        <div class="form-group form-style  ">
+            <div class="col-md-offset-6 col-md-6" style="padding: 2rem; position: relative; left: 25%">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="submit" value="Save" class="btn btn-primary disabled" />
+                }
+                else
+                {
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                }
+                &nbsp;
+                @if (ViewBag.isEditMode)
+                {
+                    <a id="anchor" href="~/Administrator/UpdateCompany?id=@Model.First().CompanyCode&CompanyName=&CompanyTagLine=&ContactPerson=&ContactNo1=&ContactNo2=&Email=&AddressLine1=&AddressLine2=&City=&PinCode=&District=&State=&Country=&Website=&PAN=&GSTNO=" class="btn btn-success">Update</a>
+                }
+                else
+                {
+                    <a href="~/Administrator/AddCompany?id=" class="btn btn-success disabled">Update</a>
+                }
+                &nbsp;
+                <a class="btn btn-info" href="~/Administrator/AddCompany?/AddCompany">Clear</a>&nbsp;
+                @if (ViewBag.isEditMode)
+                {
+                    <a href="~/Administrator/DeleteCompany?id=@Model.First().CompanyCode&RefID=@Model.First().RefID" class="btn btn-danger">Delete</a>
+                }
+                else
+                {
+                    <a href="~/Administrator/DeleteCompany?id=&RefID=" class="btn btn-danger disabled">Delete</a>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    function myfunction() {
+
+        var CompanyName  = document.getElementById("companyName").value;
+        var TagLine  = document.getElementById("tagLine").value;
+        var ContactPerson  = document.getElementById("contactPerson").value;
+        var contactNo1  = document.getElementById("contactNo1").value;
+        var ContactNo2  = document.getElementById("contactNo2").value;
+        var Email  = document.getElementById("email").value;
+        var AddressLine1 = document.getElementById("addressLine1").value;
+        var AddressLine2 = document.getElementById("addressLine2").value;
+        var City  = document.getElementById("city").value;
+        var PinCode  = document.getElementById("pinCode").value;
+        var District  = document.getElementById("district").value;
+        var State  = document.getElementById("state").value;
+        var Country  = document.getElementById("country").value;
+        var Website  = document.getElementById("website").value;
+        var PAN  = document.getElementById("pan").value;
+        var GST = document.getElementById("gst").value;
+
+        var anchor = document.getElementById("anchor").href = `UpdateCompany?id=@Model.First().CompanyCode&CompanyName=${CompanyName}&CompanyTagLine=${TagLine}&ContactPerson=${ContactPerson}&ContactNo1=${contactNo1}&ContactNo2=${ContactNo2}&Email=${Email}&AddressLine1=${AddressLine1}&AddressLine2=${AddressLine2}&City=${City}&PinCode=${PinCode}&District=${District}&State=${State}&Country=${Country}&Website=${Website}&PAN=${PAN}&GSTNO=${GST}`;
+
+    }
+</script>

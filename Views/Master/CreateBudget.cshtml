@@ -1,0 +1,249 @@
+﻿@model  IEnumerable<INSIGHT_CRM.Models.CreateBudgetModel>
+
+@{
+    ViewBag.Title = "CreateBudget";
+}
+
+<link href="~/css/ResponsiveBudgetMaster.css" rel="stylesheet" />
+
+
+@if (TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success text-center">
+        <strong>Success ! </strong>
+        @TempData["SuccessMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMsg"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <strong>Error ! </strong>
+        @TempData["ErrorMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["nodatamsg"] != null)
+{
+    <div class="alert alert-info text-center">
+        <strong>Info : </strong>
+        @TempData["nodatamsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["WarningMsg"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <strong>Warning : </strong>
+        @TempData["WarningMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+<style>
+    .form-style {
+        display: flex;
+        margin-left: 20%;
+        margin-bottom: 0.1rem;
+    }
+
+    .out_color {
+        outline: 1px solid #f47921;
+        height: 1.5rem;
+    }
+    #CompanyListTable {
+        width: 100%;
+        padding: 10% 15%;
+        margin: 0 auto;
+    }
+
+    .modal-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0;
+    }
+
+    .close {
+        font-size: 2rem;
+        padding: 0;
+        /* margin: 0; */
+        position: absolute;
+        right: 10%;
+        top: 5%;
+    }
+
+</style>
+
+
+<h2 class="text-center" style="font-weight:600;">Create Budget</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal" style="border: 1px solid royalblue">
+    <br />
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm" style="position:absolute;right:5%;">
+        <i class="fas fa-search fa-sm"></i>
+        View
+    </button>
+    <br />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <!--html model start -->
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="color:red;">&times;</span>
+                    </button>
+                </div>
+                <table class="table table-bordered table-striped table-responsive" id="CompanyListTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Budget
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.isEmpty != true)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.BudgetName
+                                    </td>
+                                    <td>
+                                        <a href="~/Master/CreateBudget?id=@item.BudgetID&RefID=@item.RefID" class="btn btn-primary">Select</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <p class="text-capitalize text-center" style="font-size:3rem;">No Data Found!!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--html model end -->
+
+    <div class="form-group form-style">
+        <label class="control-label col-md-3">Create Budget : </label>
+        <div class="col-md-10">
+            @if (ViewBag.isEditMode)
+            {
+                if (Model.Count() > 0)
+                {
+                    <input type="text" name="BudgetName" onchange="myfunction()" id="budgetvalue" value=@Model.First().BudgetName class="form-control col-md-6 out_color" />
+                }
+
+            }
+            else
+            {
+                <input type="text" name="BudgetName" value="" class="form-control col-md-6 out_color" required />
+            }
+        </div>
+    </div>
+
+    @*<div class="form-group form-style">
+            <div class="col-md-offset-6 col-md-6" style="padding: 2rem; position: relative; left: 25%">
+                @if (ViewBag.isEditMode)
+                {
+                    <input type="submit" value="Save" class="btn btn-primary disabled" />
+                }
+                else
+                {
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                }
+                &nbsp;
+                @if (ViewBag.isEditMode)
+                {
+                    <a id="anchor" href="~/Master/UpdateBudget?id=@Model.First().BudgetID&RefID=@Model.First().RefID&BudgetName=" class="btn btn-success">Update</a>
+                }
+                else
+                {
+                    <a href="~/Master/UpdateBudget?id=&RefID=&value=" class="btn btn-success disabled">Update</a>
+                }
+                &nbsp;
+                <a class="btn btn-info" href="~/Master/CreateBudget">Clear</a>&nbsp;
+                @if (ViewBag.isEditMode)
+                {
+                    <a href="~/Master/DeleteBudget?id=@Model.First().BudgetID&RefID=@Model.First().RefID" class="btn btn-danger">Delete</a>
+                }
+                else
+                {
+                    <a href="~/Master/DeleteBudget?id=&RefID=" class="btn btn-danger disabled">Delete</a>
+                }
+            </div>
+        </div>*@
+    <div class="form-group form-style">
+        <div class="text-center" style="padding: 2rem; position: relative; left: 25%">
+            @if (ViewBag.isEditMode)
+            {
+                <input type="submit" value="Save" class="btn btn-primary disabled" />
+            }
+            else
+            {
+                <input type="submit" value="Save" class="btn btn-primary" />
+            }
+            &nbsp;
+            @if (ViewBag.isEditMode)
+            {
+                <a id="anchor" href="~/Master/UpdateBudget?id=@Model.First().BudgetID&RefID=@Model.First().RefID&BudgetName=" class="btn btn-success">Update</a>
+            }
+            else
+            {
+                <a href="~/Master/UpdateBudget?id=&RefID=&value=" class="btn btn-success disabled">Update</a>
+            }
+            &nbsp;
+            <a class="btn btn-info" href="~/Master/CreateBudget">Clear</a>&nbsp;
+            @if (ViewBag.isEditMode)
+            {
+                <a href="~/Master/DeleteBudget?id=@Model.First().BudgetID&RefID=@Model.First().RefID" class="btn btn-danger">Delete</a>
+            }
+            else
+            {
+                <a href="~/Master/DeleteBudget?id=&RefID=" class="btn btn-danger disabled">Delete</a>
+            }
+        </div>
+    </div>
+
+</div>
+}
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function myfunction() {
+        var a = document.getElementById("budgetvalue").value;
+        var anchor = document.getElementById("anchor").href = `UpdateBudget?id=@Model.First().BudgetID&RefID=@Model.First().RefID&BudgetName=${a}`;
+    }
+</script>
+
+

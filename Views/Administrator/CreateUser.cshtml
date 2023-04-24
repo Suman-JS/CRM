@@ -1,0 +1,141 @@
+﻿@model INSIGHT_CRM.Models.CreateUserModel
+
+@{
+    ViewBag.Title = "CreateUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["SuccessMsg"] != null)
+{
+    <div class="alert alert-success text-center">
+        <strong>Success ! </strong>
+        @TempData["SuccessMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMsg"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <strong>Error ! </strong>
+        @TempData["ErrorMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["WarningMsg"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <strong>Warning : </strong>
+        @TempData["WarningMsg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+
+
+<style>
+    .form-style {
+        display: flex;
+        margin-left: 20%;
+        margin-bottom: 0.5rem;
+        z-index:1;
+    }
+
+    .out_color {
+        outline: 1px solid #f47921;
+        height: 2.2rem;
+        border: none;
+        border-radius: 2%;
+    }
+/*    .input-group-append {
+        position: relative;
+        left: -6%;
+        z-index:2;
+    }*/
+
+/*    #show-confirm-password, #show-password {
+        background: transparent;
+        border: none;
+        z-index:3;
+    }*/
+
+</style>
+
+<h4 class="text-center" style="font-weight:600;">Create User Crediantial</h4>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="border: 1px solid royalblue">
+
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group form-style">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.UserNames, "-- Select User --", new { @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger", @required = "required" })
+            </div>
+        </div>
+
+        <div class="form-group form-style pass-wid">
+            @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control password-input", @type = "password", @autocomplete = "off",@id="password" } })
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="show-password"><i class="fas fa-eye eye-icon"></i></span>
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group form-style">
+            @Html.LabelFor(model => model.ConfirmPwd, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.EditorFor(model => model.ConfirmPwd, new { htmlAttributes = new { @class = "form-control password-input", @type = "password", @id = "confirmPwd", @autocomplete = "off" } })
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="show-confirm-password"><i class="fas fa-eye"></i></span>
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(model => model.ConfirmPwd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Role", (IEnumerable<SelectListItem>)ViewBag.Roles, "-- Select Role --", new { @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger", @required = "required" })
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            @Html.LabelFor(model => model.Project, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Project", (IEnumerable<SelectListItem>)ViewBag.Project, "-- Select Project --", new { @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(model => model.Project, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group form-style">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create User" class="btn btn-primary" style="margin-left: 29%; margin-bottom: 5%; margin-top: 3%;"/>
+            </div>
+        </div>
+    </div>
+ }
+
+<script src="~/js/CustomJS/PasswordValidation.js"></script>
+
+
+

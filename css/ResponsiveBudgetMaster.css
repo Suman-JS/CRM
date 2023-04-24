@@ -1,0 +1,47 @@
+﻿
+@media (min-width: 481px) and (max-width: 767px) {
+    .form-style {
+        margin-left: 5%;
+    }
+
+    #CompanyListTable {
+        padding: 20% 10%;
+    }
+
+    .close {
+        right: 5%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .form-style .col-md-offset-6 {
+        width: 100%;
+        position: relative;
+        left: auto;
+        transform: none;
+    }
+
+    .form-style .col-md-6 {
+        text-align: center;
+    }
+
+    #CompanyListTable {
+        padding: 20% 10%;
+    }
+
+    .close {
+        right: 5%;
+    }
+}
+
+
+@media only screen and (max-width: 480px) {
+    .form-style {
+        flex-wrap: wrap;
+    }
+
+    .out_color {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
